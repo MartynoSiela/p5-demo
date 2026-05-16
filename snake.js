@@ -2,18 +2,18 @@ const cellSize = 50;
 const directionInitial = 'r';
 
 const snakeHead = {
+    cellX: null,
+    cellY: null,
     direction: null,
     image: null,
-    positionX: null,
-    positionY: null,
     sizeX: cellSize,
     sizeY: cellSize
 };
 
 const food = {
+    cellX: null,
+    cellY: null,
     image: null,
-    positionX: null,
-    positionY: null,
     sizeX: cellSize,
     sizeY: cellSize
 };
@@ -21,7 +21,10 @@ const food = {
 function drawHead() {
     angleMode(DEGREES);
     push();
-    translate(snakeHead.positionX, snakeHead.positionY);
+    translate(
+        cellSize * snakeHead.cellX + cellSize / 2,
+        cellSize * snakeHead.cellY + cellSize / 2
+    );
 
     if (snakeHead.direction === 'r') {
         rotate(-90);
@@ -60,20 +63,20 @@ function drawSnake() {
 
     image(
         food.image,
-        cellSize * food.positionX,
-        cellSize * food.positionY,
+        cellSize * food.cellX,
+        cellSize * food.cellY,
         food.sizeX,
         food.sizeY
     );
 
     if (snakeHead.direction === 'r') {
-        snakeHead.positionX += cellSize;
+        snakeHead.cellX += 1;
     } else if (snakeHead.direction === 'l') {
-        snakeHead.positionX -= cellSize;
+        snakeHead.cellX -= 1;
     } else if (snakeHead.direction === 'u') {
-        snakeHead.positionY -= cellSize;
+        snakeHead.cellY -= 1;
     } else if (snakeHead.direction === 'd') {
-        snakeHead.positionY += cellSize;
+        snakeHead.cellY += 1;
     }
 
     drawHead();
@@ -91,23 +94,23 @@ function keyPressedSnake() {
     }
 }
 
-function getRandomFoodPosition() {
+function getRandomFoodCellPosition() {
     const countCellX = canvasX / cellSize;
     const countCellY = canvasY / cellSize;
 
     return {
-        x: Math.floor(Math.random() * countCellX) + 1,
-        y: Math.floor(Math.random() * countCellY) + 1
+        x: Math.floor(Math.random() * countCellX),
+        y: Math.floor(Math.random() * countCellY)
     };
 }
 
 function setupSnake() {
     food.image = loadImage('assets/images/food.png');
-    food.positionX = getRandomFoodPosition().x;
-    food.positionY = getRandomFoodPosition().y;
+    food.cellX = getRandomFoodCellPosition().x;
+    food.cellY = getRandomFoodCellPosition().y;
 
     snakeHead.direction = directionInitial;
     snakeHead.image = loadImage('assets/images/snake-head.png');
-    snakeHead.positionX = cellSize * 2 + cellSize / 2;
-    snakeHead.positionY = cellSize * 2 + cellSize / 2;
+    snakeHead.cellX = 2;
+    snakeHead.cellY = 2;
 }
